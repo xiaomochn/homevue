@@ -1,33 +1,42 @@
 <template>
     <div>
-        <text>asdfasd</text>
-        <text>asdfasd</text>
-        <text>asdfasd</text>
-        <text>asdfasd</text>
-        <text>asdfasd</text>
-        <!--<list>-->
-            <!--<cell class="panel" v-for="(v ,k) in list">-->
-                <!--<div>-->
-                    <!--<text class="timertext">{{v.userNickname}}</text>-->
-                <!--</div>-->
-            <!--</cell>-->
-        <!--</list>-->
+
+        <text>1111</text>
+        <list>
+            <cell class="cell" v-for="(v ,k) in lists" >
+                <div class="panel" @click="deleteUser(k)">
+                    <text class="timertext">昵称</text>
+                    <text class="timertext">{{v.userNickname}}</text>
+                </div>
+            </cell>
+        </list>
     </div>
 </template>
 
 <script>
+    import dialog from './utilModules/dialog'
     export default {
         name: "showuser",
-        data() {
-            list :[]
+        data: {
+            lists: [{"userNickname": "11"},{"userNickname": "11"}]
         },
         mounted() {
-            // let businessLauncherModule = weex.requireModule('businessLauncher')
-            // businessLauncherModule.deleteUser(this.lists[i].userId)
-            // list = businessLauncherModule.getUserList()
-        },
-        methods() {
+            let businessLauncherModule = weex.requireModule('businessLauncher')
+            businessLauncherModule.getUserList(data => {
+                this.lists =  JSON.parse(data)
+            })
 
+        },
+        methods: {
+            deleteUser(itemnum){
+                console.log("itemclick" + itemnum)
+                dialog.showTwoBtnAlertDialog('删除该用户', '删除该用户的信息', '不删除', '删除', data => {
+                    if (data.res = 'right'){
+                        let businessLauncherModule = weex.requireModule('businessLauncher')
+                        businessLauncherModule.deleteUser(this.lists[itemnum].userId)
+                    }
+                })
+            }
         }
     }
 </script>

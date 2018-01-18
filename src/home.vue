@@ -76,7 +76,7 @@
                 dialog.showTwoBtnAlertDialog('删除该用户', '删除该用户的信息', '不删除', '删除', data => {
                     if (data.res = 'right'){
                         let businessLauncherModule = weex.requireModule('businessLauncher')
-                        businessLauncherModule.deleteUser(this.lists[i].userId)
+                        businessLauncherModule.deleteUser(this.lists[num].userId)
                     }
                 })
             }
