@@ -28,6 +28,7 @@
             timerCodet: -1,
             shwoTimer: false
         },
+
         mounted() {
 
             globalEvent.addEventListener("onnewuser", (params) => {

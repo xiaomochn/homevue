@@ -3,7 +3,7 @@
 
         <text>1111</text>
         <list>
-            <cell class="cell" v-for="(v ,k) in lists" >
+            <cell class="cell" v-for="(v ,k) in lists">
                 <div class="panel" @click="deleteUser(k)">
                     <text class="timertext">昵称</text>
                     <text class="timertext">{{v.userNickname}}</text>
@@ -15,25 +15,26 @@
 
 <script>
     import dialog from './utilModules/dialog'
+
     export default {
         name: "showuser",
         data: {
-            lists: [{"userNickname": "11"},{"userNickname": "11"}]
+            lists: [{"userNickname": "11"}, {"userNickname": "11"}]
         },
         mounted() {
             let businessLauncherModule = weex.requireModule('businessLauncher')
             businessLauncherModule.getUserList(data => {
-                this.lists =  JSON.parse(data)
+                this.lists = JSON.parse(data)
             })
-
         },
         methods: {
-            deleteUser(itemnum){
+            deleteUser(itemnum) {
                 console.log("itemclick" + itemnum)
                 dialog.showTwoBtnAlertDialog('删除该用户', '删除该用户的信息', '不删除', '删除', data => {
-                    if (data.res = 'right'){
+                    if (data.res = 'right') {
                         let businessLauncherModule = weex.requireModule('businessLauncher')
                         businessLauncherModule.deleteUser(this.lists[itemnum].userId)
+                        this.lists.splice(itemnum, 1)
                     }
                 })
             }

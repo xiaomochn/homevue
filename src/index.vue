@@ -3,6 +3,7 @@
         <image :src="logoUrl" class="logo" @click="tohome"></image>
         <text class="title" @click="update">Hello {{target}}</text>
         <text class="desc">Now, let's use vue to build your weex app.</text>
+        <text @click="totest"> totest</text>
     </div>
 </template>
 
@@ -47,6 +48,11 @@
                 console.log(businessLauncherModule)
                 businessLauncherModule.openURL('home', null, false, true)
                 // console.log('target:', 'tohome')
+            },
+            totest:function () {
+                let businessLauncherModule = weex.requireModule('businessLauncher')
+                console.log(businessLauncherModule)
+                businessLauncherModule.openURL('test3', null, false, true)
             }
         }
     }
