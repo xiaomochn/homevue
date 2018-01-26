@@ -11,6 +11,7 @@
                 </div>
             </cell>
         </list>
+        <text v-if="true" class="margtop" @click="uploadUser({userId: '1', userNickname: '12'})"> uploadser</text>
     </div>
 </template>
 
@@ -18,12 +19,17 @@
 
     import dialog from './utilModules/dialog'
 
+    import sha1m from './js/sha1.min'
+
     const globalEvent = weex.requireModule('globalEvent')
+    const stream = weex.requireModule('stream')
+    import xbuinessModule from './utilModules/xbuinessModule'
+
     export default {
         name: "home",
         data: {
             noteMessage: "点击图片添加用户",
-            lists: [{userId:'1',userNickname:'12'}],
+            lists: [{userId: '1', userNickname: '12'}],
             timerCode: -1,
             timerCodet: -1,
             shwoTimer: false
@@ -31,17 +37,39 @@
 
         mounted() {
 
+
             globalEvent.addEventListener("onnewuser", (params) => {
+                console.log("11111113")
                 if (this.shwoTimer) {
-                    this.lists.splice(this.lists.length, 1,params)
+                    console.log("11111112")
+                    this.lists.splice(this.lists.length, 1, params)
                     let businessLauncherModule = weex.requireModule('businessLauncher')
                     businessLauncherModule.addUser(params.userId, params.userNickname, 0)
+                    this.uploadUser(params);
                 }
 
             });
 
         },
         methods: {
+            uploadUser(params) {
+                xbuinessModule.getString("did", did => {
+                    console.log("1111111"+did)
+                    stream.fetch({
+                        method: "POST",
+                        url: 'https://d.apicloud.com/mcm/api/homeuser',
+                        type: 'json',
+                        headers: sha1m.getttt(),
+                        body: '{"uuid": "' + params.userId + '","name":"' + params.userNickname + '","device(uz*R*id)":"' + did + '" }'
+                    }, res => {
+                        if (res.ok) {
+                            console.log("111111" + res.data.id)
+                            this.noteMessage = false
+                        }
+                    })
+                })
+
+            },
             startTimer(run) {
                 if (run) {
                     this.timerCode = 30
@@ -75,7 +103,7 @@
             itmeClick(num) {
                 console.log("itemclick" + num)
                 dialog.showTwoBtnAlertDialog('删除该用户', '删除该用户的信息', '不删除', '删除', data => {
-                    if (data.res = 'right'){
+                    if (data.res = 'right') {
                         let businessLauncherModule = weex.requireModule('businessLauncher')
                         businessLauncherModule.deleteUser(this.lists[num].userId)
                     }
@@ -94,13 +122,16 @@
 
     }
 
+    .margtop {
+        margin-top: 30px;
+    }
+
     .timertext {
         margin-left: 30;
         font-size: 26;
         color: #0088fb;
         font-weight: bold;
     }
-
 
     .panel {
         width: 600px;

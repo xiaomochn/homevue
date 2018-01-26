@@ -9,7 +9,6 @@
     import sha1m from "./js/sha1.min"
 
     const stream = weex.requireModule('stream');
-    const POST_URL = 'http://httpbin.org/post';
     export default {
         name: "test2",
         data: {},
@@ -31,12 +30,8 @@
                     if(!ret.ok){
                         this.postResult = "request failed";
                     }else{
-                        console.log('get:'+JSON.stringify(ret));
-                        this.postResult = JSON.stringify(ret.data);
+                        console.log('get:'+JSON.stringify(ret.data));
                     }
-                },response=>{
-                    console.log('get in progress:'+response.length);
-                    this.postResult = "bytes received:"+response.length;
                 });
             }
         }
