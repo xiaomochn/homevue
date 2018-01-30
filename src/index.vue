@@ -1,8 +1,10 @@
 <template>
     <div class="wrapper">
         <image :src="logoUrl" class="logo" @click="tohome"></image>
-        <text class="title" @click="update">Hello {{target}}</text>
-        <text class="desc">Now, let's use vue to build your weex app.</text>
+        <text class="logo" @click="update">点击注册微信用户</text>
+
+        <text class="title" @click="update">查看已注册用户</text>
+        <text class="desc">下面 没注明作用的  都是测试按钮 莫管</text>
         <text @click="totest"> totest</text>
         <text v-if="notregisted" class="registerc" @click="register"> register</text>
         <text class="registerc" @click="callwxjs"> callwxjs</text>
@@ -73,12 +75,12 @@
             update: function (e) {
                 let businessLauncherModule = weex.requireModule('businessLauncher')
                 console.log(businessLauncherModule)
-                businessLauncherModule.openURL('showuser', null, false, true)
+                businessLauncherModule.openURL('module/showuser', null, false, true)
             },
             tohome: function () {
                 let businessLauncherModule = weex.requireModule('businessLauncher')
                 console.log(businessLauncherModule)
-                businessLauncherModule.openURL('home', null, false, true)
+                businessLauncherModule.openURL('module/home', null, false, true)
                 // console.log('target:', 'tohome')
             },
             totest: function () {

@@ -11,37 +11,32 @@
                 </div>
             </cell>
         </list>
-        <text v-if="true" class="margtop" @click="uploadUser({userId: '1', userNickname: '12'})"> uploadser</text>
     </div>
 </template>
 
 <script>
 
-    import dialog from './utilModules/dialog'
+    import dialog from '../utilModules/dialog'
 
-    import sha1m from './js/sha1.min'
+    import sha1m from '../js/sha1.min'
 
     const globalEvent = weex.requireModule('globalEvent')
     const stream = weex.requireModule('stream')
-    import xbuinessModule from './utilModules/xbuinessModule'
+    import xbuinessModule from '../utilModules/xbuinessModule'
 
     export default {
         name: "home",
         data: {
             noteMessage: "点击图片添加用户",
-            lists: [{userId: '1', userNickname: '12'}],
+            lists: [{userId: '1', userNickname: '新添加的用户会显示在这里'}],
             timerCode: -1,
             timerCodet: -1,
             shwoTimer: false
         },
 
         mounted() {
-
-
             globalEvent.addEventListener("onnewuser", (params) => {
-                console.log("11111113")
                 if (this.shwoTimer) {
-                    console.log("11111112")
                     this.lists.splice(this.lists.length, 1, params)
                     let businessLauncherModule = weex.requireModule('businessLauncher')
                     businessLauncherModule.addUser(params.userId, params.userNickname, 0)
@@ -54,7 +49,6 @@
         methods: {
             uploadUser(params) {
                 xbuinessModule.getString("did", did => {
-                    console.log("1111111"+did)
                     stream.fetch({
                         method: "POST",
                         url: 'https://d.apicloud.com/mcm/api/homeuser',

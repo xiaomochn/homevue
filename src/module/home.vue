@@ -1,5 +1,7 @@
 <template>
     <div>
+
+        <navigationBar></navigationBar>
         <waterfall class="page" ref="waterfall"
                    :column-width="300"
                    :column-count="auto"
@@ -7,7 +9,6 @@
                    @scroll="recylerScroll"
                    @loadmore="loadmore"
                    loadmoreoffset=3000
-
         >
             <refresh class="refres" @refresh="onrefresh" @pullingdown="pullingdown"
                      :display="refreshing ? 'show' : 'hide'">
@@ -44,6 +45,8 @@
 </template>
 
 <script>
+    import navigationBar from '../component/navigationBar.vue'
+
     export default {
         name: "home",
         data: {

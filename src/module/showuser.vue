@@ -1,10 +1,10 @@
 <template>
     <div>
 
-        <text>1111</text>
+        <text>已注册用户</text>
         <list>
             <cell class="cell" v-for="(v ,k) in lists">
-                <div class="panel" @click="deleteUser(k)">
+                <div  class="panel" @click="deleteUser(k)">
                     <text class="timertext">昵称</text>
                     <text class="timertext">{{v.userNickname}}</text>
                 </div>
@@ -14,12 +14,12 @@
 </template>
 
 <script>
-    import dialog from './utilModules/dialog'
+    import dialog from '../utilModules/dialog'
 
     export default {
         name: "showuser",
         data: {
-            lists: [{"userNickname": "11"}, {"userNickname": "11"}]
+            lists: [{"userNickname": "当前没有用户"}]
         },
         mounted() {
             let businessLauncherModule = weex.requireModule('businessLauncher')
