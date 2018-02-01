@@ -2,15 +2,25 @@
     <div>
         <image class="imgsize" src="https://vuejs.org/images/logo.png" @click="adduser"></image>
         <text>{{noteMessage}}</text>
-
         <text v-if="shwoTimer" class="timertext">{{timerCode}}</text>
         <list class="list">
+            <header class="navspace">
+
+            </header>
             <cell class="cell" v-for="(k ,num) in lists" @click="itmeClick(num)">
                 <div class="panel">
                     <text class="text"> {{k.userNickname}}</text>
                 </div>
             </cell>
+
         </list>
+        <div class="navsize">
+
+            <image style="width: 60px; height: 60px " src="../img/left_arrow.png" @click="onBackClick"></image>
+            <div style="justify-content: center ;align-items: center; width: 640px;height: 80px;flex-direction: row;position: relative;top: 0;left: 0">
+                <text style="color: #3142f5">添加用户</text>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -41,6 +51,15 @@
                     let businessLauncherModule = weex.requireModule('businessLauncher')
                     businessLauncherModule.addUser(params.userId, params.userNickname, 0)
                     this.uploadUser(params);
+                }
+
+            });
+            globalEvent.addEventListener("onReadPortEvent", (params) => {
+                if (this.shwoTimer) {
+                    this.lists.splice(this.lists.length, 1, { userNickname: '读到数据'+params.commond})
+                    // let businessLauncherModule = weex.requireModule('businessLauncher')
+                    // businessLauncherModule.addUser(params.userId, params.userNickname, 0)
+                    // this.uploadUser(params);
                 }
 
             });
@@ -102,6 +121,9 @@
                         businessLauncherModule.deleteUser(this.lists[num].userId)
                     }
                 })
+            },
+            onBackClick() {
+                xbuinessModule.backPage()
             }
 
         }
@@ -110,7 +132,9 @@
 
 <style scoped>
     .imgsize {
+
         margin: 20;
+        margin-top: 100;
         width: 300;
         height: 300;
 
@@ -125,6 +149,24 @@
         font-size: 26;
         color: #0088fb;
         font-weight: bold;
+    }
+
+    .navsize {
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        flex-direction: row;
+        align-items: center;
+        height: 80px;
+        width: 750px;
+
+    }
+
+    .navspace {
+        height: 80px;
+        width: 750px;
+
     }
 
     .panel {

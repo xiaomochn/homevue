@@ -1,166 +1,74 @@
 <template>
     <div>
-
-        <navigationBar></navigationBar>
         <waterfall class="page" ref="waterfall"
-                   :column-width="300"
+                   :column-width="200"
                    :column-count="auto"
                    :column-gap="normal"
-                   @scroll="recylerScroll"
                    @loadmore="loadmore"
                    loadmoreoffset=3000
         >
+            <header style="height: 80"></header>
             <refresh class="refres" @refresh="onrefresh" @pullingdown="pullingdown"
                      :display="refreshing ? 'show' : 'hide'">
                 <loading-indicator class="indicator"></loading-indicator>
                 <text>刷新</text>
             </refresh>
+
             <header class="header" ref="header">
-                <text>header</text>
+                <text>设备链接状态deviceId:{{deviceId }}</text>
                 <div class="bannerPhotoWrap">
                     <image class="bannerPhoto" v-for="photo in items" :src="photo.src"></image>
                 </div>
             </header>
             <header class="sheader" ref="header1">
-                <text>sheader</text>
+                <text>子设备</text>
             </header>
             <cell v-for="(item, index) in items" :key="item.src" class="cell" ref="index">
-                <div class="item">
-
+                <div class="item" @click="onDeviceClick(index)">
                     <image class="img" :src=item.src></image>
+                    <text>点击给第{{index}}个设备发信息</text>
                 </div>
             </cell>
-            <header class="sheader" ref="header1">
-                <text>sheader</text>
-                <text>contentOffset{{contentOffset}}</text>
-            </header>
+            <cell class="cell">
+                <div class="item">
+                    <image class="img" src="../img/My.png"></image>
+                    <text>点击添加设备</text>
+                </div>
+            </cell>
             <div ref="fixed" class="fixedItem" @click="scroll2Nex">
                 <text class="fixedText">bot</text>
             </div>
         </waterfall>
 
+        <div class="navsize">
+
+            <image style="width: 60px; height: 60px " src="../img/My.png" @click="menuClick"></image>
+            <div style="justify-content: center ;align-items: center; width: 640px;height: 80px;flex-direction: row;position: relative;top: 0;left: 0">
+                <text style="color: #3142f5">状态栏</text>
+            </div>
+        </div>
     </div>
 
 
 </template>
 
-<script>
-    import navigationBar from '../component/navigationBar.vue'
-
-    export default {
-        name: "home",
-        data: {
-            src: 'https://gw.alicdn.com/tps/TB1Jl1CPFXXXXcJXXXXXXXXXXXX-370-370.jpg',
-            columnWidth: '300',
-            contentOffset: 0,
-            refreshing: false,
-            items: [
-                {
-                    src: 'https://gw.alicdn.com/tps/TB1Jl1CPFXXXXcJXXXXXXXXXXXX-370-370.jpg',
-                    name: 'Thomas Carlyle',
-                    desc: 'Genius only means hard-working all one\'s life',
-                    behaviourName: 'Change width',
-                    behaviour: 'changeColumnWidth',
-                },
-                {
-                    src: 'https://gw.alicdn.com/tps/TB1Hv1JPFXXXXa3XXXXXXXXXXXX-370-370.jpg',
-                    desc: 'The man who has made up his mind to win will never say "impossible "',
-                    behaviourName: 'Change gap',
-                    behaviour: 'changeColumnGap'
-                },
-                {
-                    src: 'https://gw.alicdn.com/tps/TB1eNKuPFXXXXc_XpXXXXXXXXXX-370-370.jpg',
-                    desc: 'There is no such thing as a great talent without great will - power',
-                    behaviourName: 'Change count',
-                    behaviour: 'changeColumnCount'
-                },
-                {
-                    src: 'https://gw.alicdn.com/tps/TB1DCh8PFXXXXX7aXXXXXXXXXXX-370-370.jpg',
-                    name: 'Addison',
-                    desc: 'Cease to struggle and you cease to live',
-                    behaviourName: 'Show scrollbar',
-                    behaviour: 'showScrollbar',
-                },
-                {
-                    src: 'https://gw.alicdn.com/tps/TB1ACygPFXXXXXwXVXXXXXXXXXX-370-370.jpg',
-                    desc: 'A strong man will struggle with the storms of fate',
-                    behaviourName: 'Listen appear',
-                    behaviour: 'listenAppear',
-                },
-                {
-                    src: 'https://gw.alicdn.com/tps/TB1IGShPFXXXXaqXVXXXXXXXXXX-370-370.jpg',
-                    name: 'Ruskin',
-                    desc: 'Living without an aim is like sailing without a compass',
-                    behaviourName: 'Set scrollable',
-                    behaviour: 'setScrollable',
-                },
-                {
-                    src: 'https://gw.alicdn.com/tps/TB1xU93PFXXXXXHaXXXXXXXXXXX-240-240.jpg',
-                    behaviourName: 'waterfall padding',
-                    behaviour: 'setPadding',
-                },
-                {
-                    src: 'https://gw.alicdn.com/tps/TB19hu0PFXXXXaXaXXXXXXXXXXX-240-240.jpg',
-                    name: 'Balzac',
-                    desc: 'There is no such thing as a great talent without great will - power',
-                    behaviourName: 'listen scroll',
-                    behaviour: 'listenScroll',
-                },
-                {
-                    src: 'https://gw.alicdn.com/tps/TB1ux2vPFXXXXbkXXXXXXXXXXXX-240-240.jpg',
-                    behaviourName: 'Remove cell',
-                    behaviour: 'removeCell',
-                },
-                {
-                    src: 'https://gw.alicdn.com/tps/TB1tCCWPFXXXXa7aXXXXXXXXXXX-240-240.jpg',
-                    behaviourName: 'Move cell',
-                    behaviour: 'moveCell',
-                }
-            ]
-
-        },
-        methods: {
-            recylerScroll: function (e) {
-                this.contentOffset = e.contentOffset.y
-            },
-            loadmore: function () {
-                console.log('receive loadmore event')
-            },
-            onrefresh(event) {
-                this.refreshing = true
-                this.refreshText = "loading..."
-                setTimeout(() => {
-                    this.refreshing = false
-                    this.refreshText = '↓   pull to refresh...'
-                }, 2000)
-            },
-            scroll2Nex:function () {
-                weex.requireModule('dom').scrollToElement(this.$refs.header)
-            },
-
-        }
-
-    }
-</script>
-
 <style scoped>
     .img {
-        width: 304px;
-        height: 705px;
+        width: 200px;
+        height: 200px;
     }
 
     .page {
-        background-color: #0088fb;
+        margin-left: 16px;
+        margin-right: 16px;
     }
 
     .cell {
-
         padding-top: 6px;
         padding-bottom: 6px;
     }
 
     .item {
-        background-color: #afddff;
         align-items: center;
     }
 
@@ -175,21 +83,34 @@
         width: 40;
         margin-right: 30;
     }
+
+    .navsize {
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        flex-direction: row;
+        align-items: center;
+        height: 80px;
+        width: 750px;
+
+    }
+
     .fixedItem {
         position: fixed;
-        width:78;
-        height:78;
-        background-color:#00cc99;
+        width: 78;
+        height: 78;
+        background-color: #00cc99;
         right: 32;
         bottom: 32;
         border-radius: 39;
         align-items: center;
         justify-content: center;
     }
+
     .refres {
         flex-direction: column;
         align-items: center;
-
         height: 100;
         width: 750;
     }
@@ -198,13 +119,161 @@
         width: 449;
         height: 305;
         flex-direction: row;
-        flex-wrap:wrap;
+        flex-wrap: wrap;
 
         justify-content: space-between;
     }
+
     .bannerPhoto {
         width: 137;
         height: 137;
         margin-bottom: 6;
     }
 </style>
+<script>
+    // import navigationBar from '../component/navigationBar.vue'
+
+    import xbuiness from '../utilModules/xbuinessModule'
+
+    const modal = weex.requireModule('modal')
+    const globalEvent = weex.requireModule('globalEvent')
+    const stream = weex.requireModule('stream')
+    import sha1m from '../js/sha1.min'
+
+    export default {
+        name: "home",
+        data: {
+            src: 'https://gw.alicdn.com/tps/TB1Jl1CPFXXXXcJXXXXXXXXXXXX-370-370.jpg',
+            columnWidth: '300',
+            refreshing: false,
+            apiCloudid: '',
+            deviceId: '',// 和推送用一个id
+            items: [
+                {
+                    src: 'https://gw.alicdn.com/tps/TB1Jl1CPFXXXXcJXXXXXXXXXXXX-370-370.jpg',
+                    name: 'Thomas Carlyle',
+                    desc: 'Genius only means hard-working all one\'s life',
+                    behaviourName: 'Change width',
+                    behaviour: 'changeColumnWidth',
+                },
+                {
+                    src: 'https://gw.alicdn.com/tps/TB1Hv1JPFXXXXa3XXXXXXXXXXXX-370-370.jpg',
+                    desc: 'The man who has made up his mind to win will never say "impossible "',
+                    behaviourName: 'Change gap',
+                    behaviour: 'changeColumnGap'
+                }
+            ]
+
+        },
+        mounted() {
+            globalEvent.addEventListener("onReadPortEvent", (params) => {// 读到串口数据
+                // if (this.shwoTimer) {
+                //     // this.lists.splice(this.lists.length, 1, {userNickname: '读到数据' + params.commond})
+                //     // let businessLauncherModule = weex.requireModule('businessLauncher')
+                //     // businessLauncherModule.addUser(params.userId, params.userNickname, 0)
+                //     // this.uploadUser(params);
+                // }
+
+            });
+            globalEvent.addEventListener("ongetJpush", (params) => {// 拿到极光推送的数据
+                // if (this.shwoTimer) {
+                //     this.lists.splice(this.lists.length, 1, {userNickname: '读到数据' + params.commond})
+                //     // let businessLauncherModule = weex.requireModule('businessLauncher')
+                //     // businessLauncherModule.addUser(params.userId, params.userNickname, 0)
+                //     // this.uploadUser(params);
+                // }
+
+            });
+            this.register()
+            xbuiness.getDeviceId(deviced => {
+                this.deviceId = deviced
+            })
+
+        },
+        methods: {
+
+            loadmore: function () {
+                console.log('receive loadmore event')
+            },
+            onrefresh(event) {
+                this.refreshing = true
+                setTimeout(() => {
+                    this.refreshing = false
+                }, 2000)
+            },
+            scroll2Nex: function () {
+                weex.requireModule('dom').scrollToElement(this.$refs.header)
+            },
+            menuClick: function () {
+                xbuiness.openURL('module/showuser')
+            },
+            onDeviceClick: function (index) {
+                xbuiness.writeStr2Port('device' + index)
+
+            },
+            register: function () {
+                xbuiness.getString("apiCloudid", apiCloudid => {
+                    if (!apiCloudid.replace(/(^s*)|(s*$)/g, "").length == 0) {
+                        this.apiCloudid = apiCloudid
+                        return
+                    }
+                    xbuiness.getDeviceId(did => {
+                        stream.fetch({
+                            method: "GET",
+                            url: 'https://d.apicloud.com/mcm/api/device?filter={"where":{"did":"' + did + '"},"limit":1}',
+                            type: 'json',
+                            headers: sha1m.getttt()
+                        }, res => {
+                            if (res.ok) {
+                                if (res.data.length < 1) {
+                                    xbuiness.getDeviceId(did => {
+                                        xbuiness.getDeviceName(name => {
+                                            stream.fetch({
+                                                method: "POST",
+                                                url: 'https://d.apicloud.com/mcm/api/device',
+                                                type: 'json',
+                                                headers: sha1m.getttt(),
+                                                body: '{"did": "' + did + '","name":"' + name + '" }'
+                                            }, res => {
+                                                if (res.ok) {
+                                                    this.registerZdevice(res.data.id, '锁1', 'lock', '001')
+                                                    this.apiCloudid = res.data.id
+                                                    xbuiness.setString("apiCloudid", res.data.id)
+                                                    modal.toast({
+                                                        message: "首次打开注册成功注册成功",
+                                                        duration: 0.3
+                                                    })
+                                                }
+                                            })
+                                        })
+
+                                    })
+                                } else {
+                                    this.apiCloudid = res.data[0].id
+                                    xbuiness.setString("apiCloudid", res.data[0].id)
+                                }
+                            }
+                        })
+                    })
+
+                })
+
+
+            }
+            ,
+            registerZdevice(did, name, type, deviceid) {
+                stream.fetch({
+                    method: "POST",
+                    url: 'https://d.apicloud.com/mcm/api/dvicesmode',
+                    type: 'json',
+                    headers: sha1m.getttt(),
+                    body: '{"device(uz*R*id)": "' + did + '","name":"' + name + '" ,"type":"' + type + '","deviceid":"' + deviceid + '"}'
+                }, res => {
+
+                })
+            }
+
+        }
+
+    }
+</script>

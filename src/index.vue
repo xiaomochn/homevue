@@ -104,7 +104,6 @@
                         }, res => {
                             console.log("11111111" + JSON.stringify(res.data))
                             if (res.ok) {
-                                console.log("111111" + res.data.id)
                                 this.noteMessage = false
                                 modal.toast({
                                     message: "注册成功",

@@ -13,11 +13,12 @@ class xbuinessModule {
     static setString(k, v) {
         bunessModule.setString(k, v)
     }
+
     // 获取对象
     static getObjectString(k, callback) {
-        bunessModule.getString( v => {
+        bunessModule.getString(v => {
             callback(JSON.parse(v))
-        },k)
+        }, k)
     }
 
     // 存对象
@@ -25,12 +26,27 @@ class xbuinessModule {
 
         bunessModule.setString(k, JSON.stringify(v))
     }
+
     static getDeviceName(callback) {
-        bunessModule.getDeviceName( callback)
+        bunessModule.getDeviceName(callback)
     }
-    static sendMessageToid(uid,message){
-        bunessModule.sendMessageToid(uid,message)
+
+    static sendMessageToid(uid, message) {
+        bunessModule.sendMessageToid(uid, message)
     }
+
+    static openURL(path) {
+        bunessModule.openURL(path, null, false, true)
+    }
+
+    static backPage() {// 后退
+        bunessModule.onBackClick()
+    }
+    static writeStr2Port(commond) {// 后退
+        bunessModule.WriteStr2Port(commond)
+    }
+
+
 
 }
 
