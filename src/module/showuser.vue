@@ -17,22 +17,21 @@
                 <text class="timertext">添加新用户</text>
             </header>
         </list>
-        <div class="navsize">
+        <navigationBar title="已注册用户"
+                       style="width: 750px;height: 80px;position: absolute;top: 0;left: 0px"></navigationBar>
 
-            <image style="width: 60px; height: 60px " src="../img/left_arrow.png" @click="onBackClick"></image>
-            <div style="justify-content: center ;align-items: center; width: 640px;height: 80px;flex-direction: row;position: relative;top: 0;left: 0">
-                <text style="color: #3142f5">已注册用户</text>
-            </div>
-        </div>
+
     </div>
 </template>
 
 <script>
     import dialog from '../utilModules/dialog'
-
+    import navigationBar from '../component/navigationBar.vue'
     import buiness from '../utilModules/xbuinessModule'
+
     export default {
         name: "showuser",
+        components: {navigationBar},
         data: {
             // lists: [{"userNickname": "当前没有用户"}]
             lists: []
@@ -54,11 +53,8 @@
                     }
                 })
             },
-            toAddUser(){
+            toAddUser() {
                 buiness.openURL('module/addUser')
-            },
-            onBackClick() {
-                buiness.backPage()
             }
         }
     }
@@ -87,26 +83,15 @@
         background: azure;
     }
 
-    .navsize {
-
-        position: absolute;
-        top: 0;
-        left: 0;
-        flex-direction: row;
-        align-items: center;
-        height: 80px;
-        width: 750px;
-
-    }
-
     .navspace {
         height: 80px;
         width: 750px;
 
     }
+
     .cell {
         align-items: center;
-        justify-content:center;
+        justify-content: center;
         padding-top: 6px;
         padding-bottom: 6px;
     }

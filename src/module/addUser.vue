@@ -14,13 +14,9 @@
             </cell>
 
         </list>
-        <div class="navsize">
+        <navigationBar title="添加用户"
+                       style="width: 750px;height: 80px;position: absolute;top: 0;left: 0px"></navigationBar>
 
-            <image style="width: 60px; height: 60px " src="../img/left_arrow.png" @click="onBackClick"></image>
-            <div style="justify-content: center ;align-items: center; width: 640px;height: 80px;flex-direction: row;position: relative;top: 0;left: 0">
-                <text style="color: #3142f5">添加用户</text>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -33,9 +29,11 @@
     const globalEvent = weex.requireModule('globalEvent')
     const stream = weex.requireModule('stream')
     import xbuinessModule from '../utilModules/xbuinessModule'
+    import navigationBar from '../component/navigationBar.vue'
 
     export default {
-        name: "home",
+        name: "adduser",
+        components: {navigationBar},
         data: {
             noteMessage: "点击图片添加用户",
             lists: [{userId: '1', userNickname: '新添加的用户会显示在这里'}],
@@ -56,7 +54,7 @@
             });
             globalEvent.addEventListener("onReadPortEvent", (params) => {
                 if (this.shwoTimer) {
-                    this.lists.splice(this.lists.length, 1, { userNickname: '读到数据'+params.commond})
+                    this.lists.splice(this.lists.length, 1, {userNickname: '读到数据' + params.commond})
                     // let businessLauncherModule = weex.requireModule('businessLauncher')
                     // businessLauncherModule.addUser(params.userId, params.userNickname, 0)
                     // this.uploadUser(params);

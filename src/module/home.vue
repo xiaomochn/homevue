@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <waterfall class="page" ref="waterfall"
                    :column-width="200"
                    :column-count="auto"
@@ -39,14 +40,8 @@
                 <text class="fixedText">bot</text>
             </div>
         </waterfall>
-
-        <div class="navsize">
-
-            <image style="width: 60px; height: 60px " src="../img/My.png" @click="menuClick"></image>
-            <div style="justify-content: center ;align-items: center; width: 640px;height: 80px;flex-direction: row;position: relative;top: 0;left: 0">
-                <text style="color: #3142f5">状态栏</text>
-            </div>
-        </div>
+        <navigationBar :letftButtonClick="menuClick" title="首页" imagesrc="../img/My.png"
+                       style="width: 750px;height: 80px;position: absolute;top: 0;left: 0px"></navigationBar>
     </div>
 
 
@@ -134,6 +129,7 @@
     // import navigationBar from '../component/navigationBar.vue'
 
     import xbuiness from '../utilModules/xbuinessModule'
+    import navigationBar from '../component/navigationBar.vue'
 
     const modal = weex.requireModule('modal')
     const globalEvent = weex.requireModule('globalEvent')
@@ -142,12 +138,20 @@
 
     export default {
         name: "home",
+        components: {navigationBar},
         data: {
             src: 'https://gw.alicdn.com/tps/TB1Jl1CPFXXXXcJXXXXXXXXXXXX-370-370.jpg',
             columnWidth: '300',
             refreshing: false,
             apiCloudid: '',
             deviceId: '',// 和推送用一个id
+            menuClick: {
+                click: function () {
+                    xbuiness.openURL('module/showuser')
+                    return true
+                }
+                ,
+            },
             items: [
                 {
                     src: 'https://gw.alicdn.com/tps/TB1Jl1CPFXXXXcJXXXXXXXXXXXX-370-370.jpg',
@@ -166,6 +170,7 @@
 
         },
         mounted() {
+
             globalEvent.addEventListener("onReadPortEvent", (params) => {// 读到串口数据
                 // if (this.shwoTimer) {
                 //     // this.lists.splice(this.lists.length, 1, {userNickname: '读到数据' + params.commond})
@@ -189,28 +194,34 @@
                 this.deviceId = deviced
             })
 
-        },
+        }
+        ,
         methods: {
 
             loadmore: function () {
                 console.log('receive loadmore event')
-            },
+            }
+            ,
             onrefresh(event) {
                 this.refreshing = true
                 setTimeout(() => {
                     this.refreshing = false
                 }, 2000)
-            },
+            }
+            ,
             scroll2Nex: function () {
                 weex.requireModule('dom').scrollToElement(this.$refs.header)
-            },
+            }
+            ,
             menuClick: function () {
                 xbuiness.openURL('module/showuser')
-            },
+            }
+            ,
             onDeviceClick: function (index) {
                 xbuiness.writeStr2Port('device' + index)
 
-            },
+            }
+            ,
             register: function () {
                 xbuiness.getString("apiCloudid", apiCloudid => {
                     if (!apiCloudid.replace(/(^s*)|(s*$)/g, "").length == 0) {
