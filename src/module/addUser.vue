@@ -55,9 +55,13 @@
             globalEvent.addEventListener("onReadPortEvent", (params) => {
                 if (this.shwoTimer) {
                     this.lists.splice(this.lists.length, 1, {userNickname: '读到数据' + params.commond})
-                    // let businessLauncherModule = weex.requireModule('businessLauncher')
-                    // businessLauncherModule.addUser(params.userId, params.userNickname, 0)
-                    // this.uploadUser(params);
+                    if (params.commond.match("cardnum")){
+                        let cardid = params.commond.substring(8)
+                        let businessLauncherModule = weex.requireModule('businessLauncher')
+                        businessLauncherModule.addUser(cardid, "卡"+cardid, 0)
+                        this.uploadUser(params);
+                    }
+
                 }
 
             });

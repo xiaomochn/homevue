@@ -14,10 +14,10 @@
                 </div>
             </cell>
             <header class="cell" @click="toAddUser">
-                <text class="timertext">添加新用户</text>
+                <text class="timertext">添加新用户或卡</text>
             </header>
         </list>
-        <navigationBar title="已注册用户"
+        <navigationBar title="已注册用户" righttext="添加" :rightButtonClick="onrightButtonClick"
                        style="width: 750px;height: 80px;position: absolute;top: 0;left: 0px"></navigationBar>
 
 
@@ -34,7 +34,13 @@
         components: {navigationBar},
         data: {
             // lists: [{"userNickname": "当前没有用户"}]
-            lists: []
+            lists: [],
+            onrightButtonClick: {
+                click: function () {
+                    buiness.openURL('module/addUser')
+                    return true
+                }
+            }
         },
         mounted() {
             let businessLauncherModule = weex.requireModule('businessLauncher')
@@ -62,8 +68,8 @@
 
 <style scoped>
     .timertext {
-        margin-left: 30;
-        font-size: 26;
+        margin-left: 30px;
+        font-size: 26px;
         color: #0088fb;
         font-weight: bold;
     }

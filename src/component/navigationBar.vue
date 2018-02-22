@@ -2,9 +2,13 @@
     <div class="navsize">
 
         <image style="width: 60px; height: 60px " :src=imagesrc @click="onBackClick"></image>
-        <div style="justify-content: center ;align-items: center; width: 640px;height: 80px;flex-direction: row;position: relative;top: 0;left: 0">
+        <div style="justify-content: center ;align-items: center; width: 520px;height: 80px;flex-direction: row;position: relative;top: 0;left: 60px">
             <text style="color: #3142f5">{{title}}</text>
         </div>
+        <text v-if="this.righttext != ''"
+              style=" height: 60px;width: 100px; text-align:right; justify-content:center;align-items: center;"
+              @click="onRightClick">{{righttext}}
+        </text>
     </div>
 </template>
 
@@ -21,17 +25,28 @@
         },
         methods: {
             onBackClick() {
-                console.log(this.letftButtonClick)
                 if (!this.letftButtonClick.click()) {
                     xbuinessModule.backPage()
                 }
+            },
+            onRightClick() {
+                console.log( this.rightButtonClick)
+                this.rightButtonClick.click()
             }
 
         },
         props: {
             imagesrc: {default: '../img/left_arrow.png'},
             title: {default: '页面'},
+            righttext: '',
             letftButtonClick: {
+                default: {
+                    click() {
+                        return false
+                    }
+                }
+            },
+            rightButtonClick: {
                 default: {
                     click() {
                         return false

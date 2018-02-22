@@ -7,6 +7,7 @@
                    :column-gap="normal"
                    @loadmore="loadmore"
                    loadmoreoffset=3000
+
         >
             <header style="height: 80"></header>
             <refresh class="refres" @refresh="onrefresh" @pullingdown="pullingdown"
@@ -36,11 +37,19 @@
                     <text>点击添加设备</text>
                 </div>
             </cell>
+            <cell class="cell" @click="to12306">
+                <div class="item">
+                    <image class="img" src="../img/My.png"></image>
+                    <text>写着玩的 12306查票</text>
+                </div>
+            </cell>
+
             <div ref="fixed" class="fixedItem" @click="scroll2Nex">
                 <text class="fixedText">bot</text>
             </div>
         </waterfall>
-        <navigationBar :letftButtonClick="menuClick" title="首页" imagesrc="../img/My.png"
+        <navigationBar :letftButtonClick="menuClick" title="首页"
+                       imagesrc="../img/My.png"
                        style="width: 750px;height: 80px;position: absolute;top: 0;left: 0px"></navigationBar>
     </div>
 
@@ -150,7 +159,6 @@
                     xbuiness.openURL('module/showuser')
                     return true
                 }
-                ,
             },
             items: [
                 {
@@ -209,6 +217,9 @@
                 }, 2000)
             }
             ,
+            to12306:function() {
+                xbuiness.openURL('module/home_12306')
+            },
             scroll2Nex: function () {
                 weex.requireModule('dom').scrollToElement(this.$refs.header)
             }
