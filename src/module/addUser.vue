@@ -44,6 +44,8 @@
 
         mounted() {
             globalEvent.addEventListener("onnewuser", (params) => {
+
+
                 if (this.shwoTimer) {
                     this.lists.splice(this.lists.length, 1, params)
                     let businessLauncherModule = weex.requireModule('businessLauncher')
@@ -69,13 +71,15 @@
         },
         methods: {
             uploadUser(params) {
-                xbuinessModule.getString("did", did => {
+                console.log("b11111")
+                xbuinessModule.getDeviceId( did => {
+                    console.log("1111111did"+did)
                     stream.fetch({
                         method: "POST",
                         url: 'https://d.apicloud.com/mcm/api/homeuser',
                         type: 'json',
                         headers: sha1m.getttt(),
-                        body: '{"uuid": "' + params.userId + '","name":"' + params.userNickname + '","device(uz*R*id)":"' + did + '" }'
+                        body: '{"uuid": "' + params.userId + '","name":"' + params.userNickname + '","deviceid":"' + did + '" }'
                     }, res => {
                         if (res.ok) {
                             console.log("111111" + res.data.id)

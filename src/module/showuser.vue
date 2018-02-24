@@ -52,7 +52,7 @@
             deleteUser(itemnum) {
                 console.log("itemclick" + itemnum)
                 dialog.showTwoBtnAlertDialog('删除该用户', '删除该用户的信息', '不删除', '删除', data => {
-                    if (data.res = 'right') {
+                    if (data.res == 'right') {
                         let businessLauncherModule = weex.requireModule('businessLauncher')
                         businessLauncherModule.deleteUser(this.lists[itemnum].userId)
                         this.lists.splice(itemnum, 1)
