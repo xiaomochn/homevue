@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div @viewappear="onAppear" @viewdisappear="onDisappear">
 
 
         <list>
@@ -61,6 +61,17 @@
             },
             toAddUser() {
                 buiness.openURL('module/addUser')
+            },
+            onAppear() {
+                console.log("appear")
+                let businessLauncherModule = weex.requireModule('businessLauncher')
+                businessLauncherModule.getUserList(data => {
+                    const tempList = JSON.parse(data)
+                    if (this.lists.length != tempList.length) {
+                        console.log("变了")
+                        this.lists = tempList
+                    }
+                })
             }
         }
     }
