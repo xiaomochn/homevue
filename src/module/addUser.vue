@@ -57,10 +57,10 @@
             globalEvent.addEventListener("onReadPortEvent", (params) => {
                 if (this.shwoTimer) {
                     this.lists.splice(this.lists.length, 1, {userNickname: '读到数据' + params.commond})
-                    if (params.commond.match("cardnum:")){
+                    if (params.commond.match("cardnum:")) {
                         let cardid = params.commond.substring(8)
                         let businessLauncherModule = weex.requireModule('businessLauncher')
-                        businessLauncherModule.addUser(cardid, "卡"+cardid, 0)
+                        businessLauncherModule.addUser(cardid, "卡" + cardid, 0)
                         this.uploadUser(params);
                     }
 
@@ -72,8 +72,8 @@
         methods: {
             uploadUser(params) {
                 console.log("b11111")
-                xbuinessModule.getDeviceId( did => {
-                    console.log("1111111did"+did)
+                xbuinessModule.getDeviceId(did => {
+                    console.log("1111111did" + did)
                     stream.fetch({
                         method: "POST",
                         url: 'https://d.apicloud.com/mcm/api/homeuser',
@@ -139,10 +139,10 @@
 <style scoped>
     .imgsize {
 
-        margin: 20;
-        margin-top: 100;
-        width: 300;
-        height: 300;
+        margin: 20px;
+        margin-top: 100px;
+        width: 300px;
+        height: 300px;
 
     }
 
@@ -151,8 +151,8 @@
     }
 
     .timertext {
-        margin-left: 30;
-        font-size: 26;
+        margin-left: 30px;
+        font-size: 26px;
         color: #0088fb;
         font-weight: bold;
     }
@@ -178,12 +178,12 @@
     .panel {
         width: 600px;
         height: 100px;
-        margin-left: 10;
-        margin-top: 8;
-        margin-right: 10;
+        margin-left: 10px;
+        margin-top: 8px;
+        margin-right: 10px;
         flex-direction: column;
         justify-content: center;
-        border-width: 2;
+        border-width: 2px;
         border-style: solid;
         border-color: #afddff;
         background: azure;

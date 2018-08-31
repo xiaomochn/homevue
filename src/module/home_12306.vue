@@ -36,6 +36,7 @@
 
             buttonClicked() {
                 this.isShow = true;
+                weex.requireModule('businessLauncher').getString()
                 console.log("buttonClicked")
             },
             overlayClicked() {
