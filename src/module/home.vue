@@ -285,7 +285,7 @@
             }
             ,
             to12306: function () {
-                xbuiness.openURL('module/home_12306')
+                xbuiness.openURL('module/aworld/HomePage')
             },
             scroll2Nex: function () {
                 weex.requireModule('dom').scrollToElement(this.$refs.header)
