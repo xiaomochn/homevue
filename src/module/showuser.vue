@@ -1,10 +1,8 @@
 <template>
     <div @viewappear="onAppear" @viewdisappear="onDisappear">
 
-
         <list>
             <header class="navspace">
-
             </header>
             <cell class="cell" v-for="(v ,k) in lists">
 

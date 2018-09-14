@@ -13,6 +13,10 @@ class xbuinessModule {
         bunessModule.setString(k, v)
     }
 
+    static backByNum(n) {// 返回几层
+        bunessModule.backByNum(n)
+    }
+
     // 获取对象
     static getObjectString(k, callback) {
         bunessModule.getString(v => {
@@ -33,9 +37,10 @@ class xbuinessModule {
         bunessModule.sendMessageToid(uid, message)
     }
 
-    static openURL(path) {
-        bunessModule.openURL(path, null, false, true)
+    static openURL(path, parm) {
+        bunessModule.openURL(path, parm)
     }
+
 
     static backPage() { // 后退
         bunessModule.onBackClick()
@@ -49,50 +54,50 @@ class xbuinessModule {
 if (typeof weex.registerModule == 'function')
     weex.registerModule('businessLauncher', {
         greeting() {
-            console.log('Hello, nice to meet you. I am your guide.')
+            console.log('greeting')
         },
         farewell() {
-            console.log('Goodbye, I am always at your service.')
+            console.log('farewell')
         },
 
         getDeviceId(callback) {
-            console.log('Goodbye, I am always at your service.')
+            console.log('getDeviceId')
         },
 
         getString(k, callback) {
-            console.log('Goodbye, I am always at your service.')
+            console.log('getString')
         },
 
         setString(k, v) {
-            console.log('Goodbye, I am always at your service.')
+            console.log('setString')
         },
 
         // 获取对象
         getObjectString(k, callback) {
-            console.log('Goodbye, I am always at your service.')
+            console.log('getObjectString')
         },
         // 存对象
         setObject(k, v) {
-            console.log('Goodbye, I am always at your service.')
+            console.log('setObject')
         },
 
         getDeviceName(callback) {
-            console.log('Goodbye, I am always at your service.')
+            console.log('getDeviceName')
         },
 
         sendMessageToid(uid, message) {
-            console.log('Goodbye, I am always at your service.')
+            console.log('sendMessageToid')
         },
 
         openURL(path) {
-            console.log('Goodbye, I am always at your service.')
+            console.log('openURL')
         },
 
         backPage() { // 后退
-            console.log('Goodbye, I am always at your service.')
+            console.log('backPage')
         },
         writeStr2Port(commond) { // 后退
-            console.log('Goodbye, I am always at your service.')
+            console.log('writeStr2Port')
         }
 
     })

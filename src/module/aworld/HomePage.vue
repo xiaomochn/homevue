@@ -1,6 +1,5 @@
 <template>
     <div class="continer">
-
         <div ref="space1" class="space" style="opacity: 0">
             <image class="aimage" resize="contain" :src="aworlds[1].aimage" :style="{height:screenHeight}"/>
             <div class="aworld-div" :style="{height:screenHeight}">
@@ -13,21 +12,30 @@
                 <text class="aworld">{{aworlds[0].aworld}}</text>
             </div>
         </div>
-        <div style="flex-direction: row;opacity: 0.5">
-            <text style="color: #ffffff;font-size: 80px;padding-left: 30px;padding-top: 20px">?</text>
-            <div style="flex: 1"></div>
-            <text style="color: #ffffff;font-size: 80px;padding-left: 30px;padding-top: 20px;padding-right: 20px"
-                  @click="addWorld">+
-            </text>
+
+        <div ref="spaceleft" @click="spaceleftOff" class="space-left" :style="{visibility:spaceleftVisibility }">
+            <div class="aworld-div" :style="{height:screenHeight}">
+                <text class="aworld">
+你一定有一句话想对谁说
+你一定有一些秘密却想让谁知道
+在这里
+你可以尽情的呐喊
+在这里
+你可以尽情倾诉
+一句告白
+一声呐喊
+在这里发布的消息
+会立即显示在所有正在使用这个App的屏幕上
+直到被其他人替换
+                </text>
+            </div>
         </div>
-        <!--<wxc-minibar title=""-->
-        <!--use-default-return=false-->
-        <!--background-color="#00000000"-->
-        <!--text-color="#FFFFFF"-->
-        <!--right-text="更多"-->
-        <!--@wxcMinibarLeftButtonClicked="minibarLeftButtonClick"-->
-        <!--@wxcMinibarRightButtonClicked="minibarRightButtonClick"-->
-        <!--style="opacity: 0.5"></wxc-minibar>-->
+        <div style="flex-direction: row;opacity: 0.5">
+            <text style="color: #ffffff;font-size: 80px;padding-left: 30px;padding-top: 20px" @click="spaceleftOn">?
+            </text>
+            <div style="flex: 1"></div>
+            <text class="addWorld" @click="addWorld">+</text>
+        </div>
     </div>
 </template>
 
@@ -35,8 +43,10 @@
     import {WxcButton, WxcPopup, WxcMinibar} from 'weex-ui';
     import navigationBar from "../../component/navigationBar.vue";
     import xbuiness from '../../utilModules/xbuinessModule'
-    const animation = weex.requireModule('animation')
+    import sha1m from '../../js/sha1.min'
 
+    const animation = weex.requireModule('animation')
+    const stream = weex.requireModule('stream')
     const modal = weex.requireModule('modal');
 
     export default {
@@ -46,18 +56,23 @@
             return {
                 aworlds: [
                     {
-                        aworld: "考拉征信1",
-                        aimage: "http://10.5.19.26:8445/app/kaolaweb/kaolaapp/creditloan/theme/0fc94f73-8930-450f-93f2-bd958eca8c78.png",
-                        ref: this.$refs.space0
+                        aworld: "考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1",
+                        aimage: "",
+                        ref: this.$refs.space0,
+                        id:"1"
                     },
                     {
                         aworld: "考拉征信2",
-                        aimage: "http://10.5.19.26:8445/app/kaolaweb/kaolaapp/creditloan/theme/3ca16bb2-54cd-491a-929a-4c48818dcdd7.png",
-                        ref: this.$refs.space1
+                        aimage: "",
+                        ref: this.$refs.space1,
+                        id:""
                     },
                 ],
-                currentIndex: 0,
-                screenHeight: 1000
+                currentIndex: 0,// 本地 两条里边的
+                screenHeight: 1000,
+                spaceleftVisibility: "hidden",
+                timer: "",
+                currentItemIndex:0// 服务器 index
 
             }
         },
@@ -66,12 +81,28 @@
             this.aworlds[0].ref = this.$refs.space0
             this.aworlds[1].ref = this.$refs.space1
             this.screenHeight = weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750
+
+            this.setCurrent()
+
+            this.timer = setInterval(() => {
+                this.minibarRightButtonClick()
+                this.getaddWorld()
+            }, 5000)
+        },
+        destroyed() {
+            clearInterval(this.timer)
         },
         methods: {
             minibarRightButtonClick() {
 
-                var space1 = this.getCurrentItem();
-                var space2 = this.getNextItem();
+                const current = this.getCurrentItem()
+                const next = this.getNextItem()
+                const space1 = current.ref;
+                const space2 = next.ref;
+
+                console.log(this.getCurrentItem().des)
+                console.log(this.getNextItem().des)
+                if (next.id==""||current.id == next.id)return;
                 this.currentIndex = (this.currentIndex + 1) % 2
                 animation.transition(space1, {
                     styles: {
@@ -90,18 +121,91 @@
                     duration: 800, //ms
                     timingFunction: 'ease',
                     delay: 0 //ms
-                }, function () {
+                }, () => {
                     // modal.toast({message: 'animation finished.'})
+
+                })
+
+            },
+            setCurrent() {
+                stream.fetch({
+                    method: "GET",
+                    url: 'https://d.apicloud.com/mcm/api/aworlds?filter={"where":{},"order":"updatedAt%20DESC","skip":0,"limit":1}',
+                    type: 'json',
+                    headers: sha1m.getttt(),
+                }, res => {
+                    if (res.ok && res.data.length > 0) {
+                        const next = this.getCurrentItem()
+                        next.aworld = res.data[0].des
+                        next.aimage = res.data[0].img
+                        next.id = res.data[0].id
+                    }
+                })
+            },
+            getaddWorld() {
+
+                stream.fetch({
+                    method: "GET",
+                    url: 'https://d.apicloud.com/mcm/api/aworlds?filter={"where":{},"order":"updatedAt%20DESC","skip":0,"limit":1}',
+                    type: 'json',
+                    headers: sha1m.getttt(),
+                }, res => {
+                    if (res.ok && res.data.length > 0) {
+                        const next = this.getNextItem()
+                        next.aworld = res.data[0].des
+                        next.aimage = res.data[0].img
+                        next.id = res.data[0].id
+                        console.log(res.data[0].index)
+                        if(!isNaN(res.data[0].index)){
+                            xbuiness.setString("currentItemIndex",res.data[0].index+1+"")
+                            xbuiness.getString("currentItemIndex",v=>{
+                                console.log(v)
+                            })
+                        }
+
+                    }
                 })
             },
             addWorld() {
                 xbuiness.openURL('module/aworld/AddAworld')
             },
             getCurrentItem() {
-                return this.aworlds[this.currentIndex].ref
+                return this.aworlds[this.currentIndex]
             },
             getNextItem() {
-                return this.aworlds[(this.currentIndex + 1) % 2].ref
+                return this.aworlds[(this.currentIndex + 1) % 2]
+            },
+            spaceleftOn() {
+                if(this.spaceleftVisibility == "visible"){
+                    this.spaceleftOff()
+                    return
+                }
+                const space = this.$refs.spaceleft
+                this.spaceleftVisibility = "visible"
+                animation.transition(space, {
+                    styles: {
+                        opacity: '1',
+                    },
+                    duration: 300, //ms
+                    timingFunction: 'ease',
+                    delay: 0 //ms
+                }, function () {
+                    // modal.toast({message: 'animation finished.'})
+                })
+            },
+            spaceleftOff() {
+                const space = this.$refs.spaceleft
+                // this.spaceleftVisibility = "hidden"
+                animation.transition(space, {
+                    styles: {
+                        opacity: '0',
+                    },
+                    duration: 300, //ms
+                    timingFunction: 'ease',
+                    delay: 0 //ms
+                }, () => {
+                    this.spaceleftVisibility = "hidden"
+                })
             },
         }
     }
@@ -110,9 +214,10 @@
 <style scoped>
     .aworld {
         width: 750px;
-        fount-size: 40px;
-        color: #717171;
+        font-size: 40px;
+        color: white;
         text-align: center;
+        line-height: 60px;
     }
 
     .aworld-div {
@@ -130,7 +235,24 @@
 
         position: absolute
     }
-    .continer{
-        background-image: linear-gradient(to bottom right , #339bce, #35cc89);
+
+    .space-left {
+        top: 0;
+        left: 0;
+        width: 750px;
+        background-image: linear-gradient(to bottom right, #339bce, #35cc89);
+        position: absolute
+    }
+
+    .addWorld {
+        color: #ffffff;
+        font-size: 80px;
+        padding-left: 30px;
+        padding-top: 20px;
+        padding-right: 20px;
+    }
+
+    .continer {
+        background-image: linear-gradient(to bottom right, #339bce, #35cc89);
     }
 </style>
