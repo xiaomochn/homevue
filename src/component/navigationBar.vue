@@ -13,7 +13,7 @@
 </template>
 
 <script>
-    import xbuinessModule from '../utilModules/xbuinessModule'
+    import xbuinessModule from '../utilModules/CommonModule'
 
     export default {
         name: 'navigationBar',

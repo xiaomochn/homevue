@@ -82,6 +82,8 @@
     "webpack-merge": "^4.1.0",
     "webpack-uglify-parallel": "^0.1.4",
     "weex-loader": "^0.7.2",
-    "weex-ui": "latest"
+    "weex-ui": "latest",
+    "less": "^2.7.2",
+    "less-loader": "^2.2.3"
   }
 }

@@ -1,4 +1,4 @@
-import xbuiness from '../utilModules/xbuinessModule'
+
 import sha1m from './sha1.min'
 
 const stream = weex.requireModule('stream')
@@ -22,9 +22,6 @@ export default {
     },
     obj2Str(obj) {
         return obj
-    },
-    getDeviceId(callback) {
-        xbuiness.getDeviceId(callback)
     }
 
 

@@ -1,53 +1,56 @@
-const bunessModule = weex.requireModule('businessLauncher')
+const commonModule = weex.requireModule('CommonModule')
 
-class xbuinessModule {
+class CommonModule {
     static getDeviceId(callback) {
-        bunessModule.getDeviceId(callback)
+        commonModule.getDeviceId(callback)
     }
 
     static getString(k, callback) {
-        bunessModule.getString(callback, k)
+        commonModule.getString(callback, k)
     }
 
     static setString(k, v) {
-        bunessModule.setString(k, v)
+        commonModule.setString(k, v)
     }
 
     static backByNum(n) {// 返回几层
-        bunessModule.backByNum(n)
+        commonModule.backByNum(n)
+    }
+    static uploadFile(path,callback) {//
+        commonModule.uploadFile(path,callback)
     }
 
     // 获取对象
     static getObjectString(k, callback) {
-        bunessModule.getString(v => {
+        commonModule.getString(v => {
             callback(JSON.parse(v))
         }, k)
     }
 
     // 存对象
     static setObject(k, v) {
-        bunessModule.setString(k, JSON.stringify(v))
+        commonModule.setString(k, JSON.stringify(v))
     }
 
     static getDeviceName(callback) {
-        bunessModule.getDeviceName(callback)
+        commonModule.getDeviceName(callback)
     }
 
     static sendMessageToid(uid, message) {
-        bunessModule.sendMessageToid(uid, message)
+        commonModule.sendMessageToid(uid, message)
     }
 
     static openURL(path, parm) {
-        bunessModule.openURL(path, parm)
+        commonModule.openURL(path, parm)
     }
 
 
     static backPage() { // 后退
-        bunessModule.onBackClick()
+        commonModule.onBackClick()
     }
 
-    static writeStr2Port(commond) { // 后退
-        bunessModule.WriteStr2Port(commond)
+    static PickeImage(callback) { // 后退
+        commonModule.PickeImage(callback)
     }
 }
 
@@ -102,4 +105,4 @@ if (typeof weex.registerModule == 'function')
 
     })
 
-export default xbuinessModule
+export default CommonModule

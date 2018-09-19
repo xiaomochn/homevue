@@ -1,19 +1,20 @@
 <template>
     <div class="continer">
-        <wxc-minibar title=""
-                     background-color="#00000000"
-                     text-color="#FFFFFF"
-                     right-text="完成"
-                     @wxcMinibarLeftButtonClicked="addWorld"
-                     @wxcMinibarRightButtonClicked="addWorld"
-                     style="opacity: 0.5"></wxc-minibar>
-        <div @click="minibarRightButtonClick" class="space">
-            <image class="aimage" resize="contain" :src="imgSrc" :style="{height:screenHeight}"/>
+
+        <div @click="addImage" class="space">
+            <image class="tab" resize="contain" src="../../img/bluetooth_off_ta.png"/>
+            <image class="aimage" resize="cover" :src="imgSrc" :style="{height:screenHeight}"/>
+
             <div class="aworld-div" :style="{height:screenHeight}">
                 <text class="aworld">{{inputWorld}}</text>
             </div>
         </div>
 
+        <div style="flex-direction: row;opacity: 0.5">
+            <image class="addWorld" src="../../img/back_button.png" @click="back"/>
+            <div style="flex: 1"></div>
+            <image class="addWorld" src="../../img/authorization_success_icon.png" @click="addWorld"/>
+        </div>
     </div>
 </template>
 
@@ -23,7 +24,7 @@
 
     const stream = weex.requireModule('stream')
     const modal = weex.requireModule('modal');
-    import xbuiness from '../../utilModules/xbuinessModule'
+    import xbuiness from '../../utilModules/CommonModule'
     import sha1m from '../../js/sha1.min'
 
 
@@ -35,7 +36,8 @@
                 screenHeight: 1000,
                 textHeight: 300,
                 imgSrc: "",
-                inputWorld: ""
+                inputWorld: "",
+                path:""
             }
         },
 
@@ -43,32 +45,47 @@
             this.screenHeight = weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750
         },
         methods: {
+            back() {
+                xbuiness.backPage()
+            },
+            addImage() {
+                xbuiness.PickeImage(src => {
+
+                    console.log(src)
+                    this.imgSrc = "file:///" + src
+                    this.path = src
+                })
+            },
             addWorld() {
+                console.log("1111111")
+                xbuiness.uploadFile(this.path, url => {
+                    console.log(url)
+                    xbuiness.getString("currentItemIndex", v => {
+                        const parm = {
 
-                xbuiness.getString("currentItemIndex", v => {
-                    const parm = {
-
-                        "title": "",
-                        "des": this.inputWorld,
-                        "img": this.imgSrc,
-                        "did": "default",
-                        "index": v,
-                    }
-                    console.log(parm)
-                    stream.fetch({
-                        method: "POST",
-                        url: 'https://d.apicloud.com/mcm/api/aworlds',
-                        type: 'json',
-                        headers: sha1m.getttt(),
-                        body: parm
-                    }, res => {
-                        if (res.ok) {
-                            xbuiness.backByNum(2)
-                        } else {
-
+                            "title": "",
+                            "des": this.inputWorld,
+                            "img": url,
+                            "did": "default",
+                            "index": v,
                         }
+                        console.log(parm)
+                        stream.fetch({
+                            method: "POST",
+                            url: 'https://d.apicloud.com/mcm/api/aworlds',
+                            type: 'json',
+                            headers: sha1m.getttt(),
+                            body: parm
+                        }, res => {
+                            if (res.ok) {
+                                xbuiness.backByNum(2)
+                            } else {
+
+                            }
+                        })
                     })
                 })
+
 
             },
         }
@@ -83,8 +100,8 @@
 
     .aworld {
         width: 750px;
-        fount-size: 40px;
-        color: #717171;
+        font-size: 40px;
+        color: white;
         text-align: center;
     }
 
@@ -99,6 +116,13 @@
         position: absolute
     }
 
+    .tab {
+        top: 700px;
+        left: 341px;
+        width: 68px;
+        height:120px;
+        position: absolute
+    }
     .space {
 
         position: absolute
@@ -106,5 +130,13 @@
 
     .continer {
         background-image: linear-gradient(to bottom right, #339bce, #35cc89);
+    }
+    .addWorld {
+        width: 140px;
+        height: 140px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        padding-right: 30px;
+        padding-left: 30px;
     }
 </style>

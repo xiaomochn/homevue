@@ -1,13 +1,13 @@
 <template>
-    <div class="continer">
+    <div class="continer" @appear="appear" @disappear="disappear">
         <div ref="space1" class="space" style="opacity: 0">
-            <image class="aimage" resize="contain" :src="aworlds[1].aimage" :style="{height:screenHeight}"/>
+            <image class="aimage" resize="cover" :src="aworlds[1].aimage" :style="{height:screenHeight}"/>
             <div class="aworld-div" :style="{height:screenHeight}">
                 <text class="aworld">{{aworlds[1].aworld}}</text>
             </div>
         </div>
         <div ref="space0" @click="minibarRightButtonClick" class="space">
-            <image class="aimage" resize="contain" :src="aworlds[0].aimage" :style="{height:screenHeight}"/>
+            <image class="aimage" resize="cover" :src="aworlds[0].aimage" :style="{height:screenHeight}"/>
             <div class="aworld-div" :style="{height:screenHeight}">
                 <text class="aworld">{{aworlds[0].aworld}}</text>
             </div>
@@ -25,16 +25,16 @@
 一句告白
 一声呐喊
 在这里发布的消息
-会立即显示在所有正在使用这个App的屏幕上
+会立即显示在
+所有正在使用这个App的屏幕上
 直到被其他人替换
                 </text>
             </div>
         </div>
         <div style="flex-direction: row;opacity: 0.5">
-            <text style="color: #ffffff;font-size: 80px;padding-left: 30px;padding-top: 20px" @click="spaceleftOn">?
-            </text>
+            <image class="addWorld" src="../../img/tutorial_button.png" @click="spaceleftOn"/>
             <div style="flex: 1"></div>
-            <text class="addWorld" @click="addWorld">+</text>
+            <image class="addWorld" src="../../img/add_device_butto.png" @click="addWorld"/>
         </div>
     </div>
 </template>
@@ -42,7 +42,7 @@
 <script>
     import {WxcButton, WxcPopup, WxcMinibar} from 'weex-ui';
     import navigationBar from "../../component/navigationBar.vue";
-    import xbuiness from '../../utilModules/xbuinessModule'
+    import xbuiness from '../../utilModules/CommonModule'
     import sha1m from '../../js/sha1.min'
 
     const animation = weex.requireModule('animation')
@@ -56,24 +56,23 @@
             return {
                 aworlds: [
                     {
-                        aworld: "考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1考拉征信1",
+                        aworld: "",
                         aimage: "",
                         ref: this.$refs.space0,
-                        id:"1"
+                        id: "1"
                     },
                     {
                         aworld: "考拉征信2",
                         aimage: "",
                         ref: this.$refs.space1,
-                        id:""
+                        id: ""
                     },
                 ],
                 currentIndex: 0,// 本地 两条里边的
                 screenHeight: 1000,
                 spaceleftVisibility: "hidden",
                 timer: "",
-                currentItemIndex:0// 服务器 index
-
+                currentItemIndex: 0,// 服务器 index
             }
         },
 
@@ -82,15 +81,9 @@
             this.aworlds[1].ref = this.$refs.space1
             this.screenHeight = weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750
 
-            this.setCurrent()
-
-            this.timer = setInterval(() => {
-                this.minibarRightButtonClick()
-                this.getaddWorld()
-            }, 5000)
         },
         destroyed() {
-            clearInterval(this.timer)
+
         },
         methods: {
             minibarRightButtonClick() {
@@ -100,9 +93,7 @@
                 const space1 = current.ref;
                 const space2 = next.ref;
 
-                console.log(this.getCurrentItem().des)
-                console.log(this.getNextItem().des)
-                if (next.id==""||current.id == next.id)return;
+                if (next.id == "" || current.id == next.id) return;
                 this.currentIndex = (this.currentIndex + 1) % 2
                 animation.transition(space1, {
                     styles: {
@@ -142,6 +133,18 @@
                     }
                 })
             },
+            disappear(){
+                clearInterval(this.timer)
+            },
+            appear(){
+
+                this.setCurrent()
+
+                this.timer = setInterval(() => {
+                    this.minibarRightButtonClick()
+                    this.getaddWorld()
+                }, 5000)
+            },
             getaddWorld() {
 
                 stream.fetch({
@@ -155,12 +158,9 @@
                         next.aworld = res.data[0].des
                         next.aimage = res.data[0].img
                         next.id = res.data[0].id
-                        console.log(res.data[0].index)
-                        if(!isNaN(res.data[0].index)){
-                            xbuiness.setString("currentItemIndex",res.data[0].index+1+"")
-                            xbuiness.getString("currentItemIndex",v=>{
-                                console.log(v)
-                            })
+
+                        if (!isNaN(res.data[0].index)) {
+                            xbuiness.setString("currentItemIndex", res.data[0].index + 1 + "")
                         }
 
                     }
@@ -176,7 +176,8 @@
                 return this.aworlds[(this.currentIndex + 1) % 2]
             },
             spaceleftOn() {
-                if(this.spaceleftVisibility == "visible"){
+
+                if (this.spaceleftVisibility == "visible") {
                     this.spaceleftOff()
                     return
                 }
@@ -245,11 +246,12 @@
     }
 
     .addWorld {
-        color: #ffffff;
-        font-size: 80px;
+        width: 140px;
+        height: 140px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        padding-right: 30px;
         padding-left: 30px;
-        padding-top: 20px;
-        padding-right: 20px;
     }
 
     .continer {

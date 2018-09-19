@@ -1,21 +1,18 @@
 <template>
     <div class="continer">
 
-
-        <wxc-minibar title=""
-                     background-color="#00000000"
-                     text-color="#FFFFFF"
-                     right-text="  完 成"
-                     @wxcMinibarLeftButtonClicked="minibarLeftButtonClick"
-                     @wxcMinibarRightButtonClicked="minibarLeftButtonClick"
-                     style="opacity: 0.5"></wxc-minibar>
+        <div style="flex-direction: row;opacity: 0.5">
+            <image class="addWorld" src="../../img/back_button.png" @click="back"/>
+            <div style="flex: 1"></div>
+            <image class="addWorld" src="../../img/authorization_success_icon.png" @click="minibarLeftButtonClick"/>
+        </div>
         <div class="a-input-div" :style="{height:screenHeight-50}">
-            <image class="aimage" resize="contain" :src="imgSrc" :style="{height:screenHeight}"/>
+            <image class="aimage" resize="cover" :src="imgSrc" :style="{height:screenHeight}"/>
             <textarea :style="{height:screenHeight-50}"
                       class="a-input"
                       rows="30"
                       @input="onChange"
-                      placeholder=""/>
+                      placeholder="输入内容,完成后可以在下一步添加一张图片"/>
 
         </div>
 
@@ -27,7 +24,7 @@
     import {WxcButton, WxcPopup, WxcMinibar} from 'weex-ui';
     import navigationBar from "../../component/navigationBar.vue";
 
-    import xbuiness from '../../utilModules/xbuinessModule'
+    import xbuiness from '../../utilModules/CommonModule'
 
     const modal = weex.requireModule('modal');
 
@@ -47,8 +44,8 @@
             this.screenHeight = weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750
         },
         methods: {
-            addWorld() {
-
+            back() {
+                xbuiness.backPage()
             },
             minibarLeftButtonClick(){
                 const parm = {inputWorld:this.inputWorld}
@@ -76,16 +73,25 @@
     }
 
     .a-input {
-        left: 20px;
-        width: 700px;
+        left: 30px;
+        width: 690px;
         height: 1000px;
-        background-color: transparent;
         color: white;
         fount-weight: bold;
+        font-size: 40px;
+        placeholder-color:white;
     }
 
     .aimage {
         width: 750px;
         position: absolute
+    }
+    .addWorld {
+        width: 140px;
+        height: 140px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        padding-right: 30px;
+        padding-left: 30px;
     }
 </style>
