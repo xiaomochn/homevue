@@ -12,7 +12,7 @@
                       class="a-input"
                       rows="30"
                       @input="onChange"
-                      placeholder="输入内容,完成后可以在下一步添加一张图片"/>
+                      placeholder="输入内容,完成后可以在下一步添加背景图片,内容不能少于5个字"/>
 
         </div>
 
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import {WxcButton, WxcPopup, WxcMinibar} from 'weex-ui';
+
     import navigationBar from "../../component/navigationBar.vue";
 
     import xbuiness from '../../utilModules/CommonModule'
@@ -29,14 +29,14 @@
     const modal = weex.requireModule('modal');
 
     export default {
-        components: {navigationBar, WxcButton, WxcPopup, WxcMinibar},
+        components: {navigationBar},
         name: "home-aworld",
         data() {
             return {
                 screenHeight: 1000,
                 textHeight: 300,
                 imgSrc: "",
-                inputWorld:""
+                inputWorld:"",
             }
         },
 
@@ -48,6 +48,13 @@
                 xbuiness.backPage()
             },
             minibarLeftButtonClick(){
+                if(this.inputWorld.length<5){
+                    modal.toast({
+                        'message': '请输入至少5个字',
+                        'duration': 1
+                    });
+                    return
+                }
                 const parm = {inputWorld:this.inputWorld}
 
                 xbuiness.openURL("module/aworld/AddAworldImage",JSON.stringify(parm))

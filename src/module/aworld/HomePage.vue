@@ -1,19 +1,23 @@
 <template>
-    <div class="continer" @appear="appear" @disappear="disappear">
-        <div ref="space1" class="space" style="opacity: 0">
+    <div class="continer" @viewappear="appear1" @viewdisappear="viewdisappear">
+        <div ref="space1" class="space"  >
+
             <image class="aimage" resize="cover" :src="aworlds[1].aimage" :style="{height:screenHeight}"/>
             <div class="aworld-div" :style="{height:screenHeight}">
                 <text class="aworld">{{aworlds[1].aworld}}</text>
             </div>
+
         </div>
-        <div ref="space0" @click="minibarRightButtonClick" class="space">
+        <div ref="space0" class="space">
+
             <image class="aimage" resize="cover" :src="aworlds[0].aimage" :style="{height:screenHeight}"/>
             <div class="aworld-div" :style="{height:screenHeight}">
                 <text class="aworld">{{aworlds[0].aworld}}</text>
             </div>
+
         </div>
 
-        <div ref="spaceleft" @click="spaceleftOff" class="space-left" :style="{visibility:spaceleftVisibility }">
+        <div  ref="spaceleft" @click="spaceleftOff" class="space-left" :style="{visibility:spaceleftVisibility }">
             <div class="aworld-div" :style="{height:screenHeight}">
                 <text class="aworld">
 你一定有一句话想对谁说
@@ -31,7 +35,7 @@
                 </text>
             </div>
         </div>
-        <div style="flex-direction: row;opacity: 0.5">
+        <div @appear="appear1" style="flex-direction: row;opacity: 0.5">
             <image class="addWorld" src="../../img/tutorial_button.png" @click="spaceleftOn"/>
             <div style="flex: 1"></div>
             <image class="addWorld" src="../../img/add_device_butto.png" @click="addWorld"/>
@@ -87,7 +91,7 @@
         },
         methods: {
             minibarRightButtonClick() {
-
+                console.log("minibarRightButtonClick")
                 const current = this.getCurrentItem()
                 const next = this.getNextItem()
                 const space1 = current.ref;
@@ -103,7 +107,7 @@
                     timingFunction: 'ease',
                     delay: 0 //ms
                 }, function () {
-                    // modal.toast({message: 'animation finished.'})
+
                 })
                 animation.transition(space2, {
                     styles: {
@@ -113,8 +117,6 @@
                     timingFunction: 'ease',
                     delay: 0 //ms
                 }, () => {
-                    // modal.toast({message: 'animation finished.'})
-
                 })
 
             },
@@ -126,27 +128,28 @@
                     headers: sha1m.getttt(),
                 }, res => {
                     if (res.ok && res.data.length > 0) {
+                        console.log("setCurrent"+res.data[0].img)
                         const next = this.getCurrentItem()
                         next.aworld = res.data[0].des
+
                         next.aimage = res.data[0].img
                         next.id = res.data[0].id
                     }
                 })
             },
-            disappear(){
+            viewdisappear(){
                 clearInterval(this.timer)
             },
-            appear(){
-
+            appear1(){
+                console.log("appear1")
                 this.setCurrent()
-
                 this.timer = setInterval(() => {
                     this.minibarRightButtonClick()
                     this.getaddWorld()
                 }, 5000)
             },
             getaddWorld() {
-
+                console.log("getaddWorld")
                 stream.fetch({
                     method: "GET",
                     url: 'https://d.apicloud.com/mcm/api/aworlds?filter={"where":{},"order":"updatedAt%20DESC","skip":0,"limit":1}',
@@ -155,14 +158,17 @@
                 }, res => {
                     if (res.ok && res.data.length > 0) {
                         const next = this.getNextItem()
+                        if( next.id == res.data[0].id){
+                            return
+                        }
+                        console.log("setCurrentnext.id:"+next.id+"   currentid:"+res.data[0].id)
+                        console.log("setCurrentimg:"+res.data[0].img)
                         next.aworld = res.data[0].des
                         next.aimage = res.data[0].img
                         next.id = res.data[0].id
-
                         if (!isNaN(res.data[0].index)) {
                             xbuiness.setString("currentItemIndex", res.data[0].index + 1 + "")
                         }
-
                     }
                 })
             },
@@ -191,12 +197,10 @@
                     timingFunction: 'ease',
                     delay: 0 //ms
                 }, function () {
-                    // modal.toast({message: 'animation finished.'})
                 })
             },
             spaceleftOff() {
                 const space = this.$refs.spaceleft
-                // this.spaceleftVisibility = "hidden"
                 animation.transition(space, {
                     styles: {
                         opacity: '0',

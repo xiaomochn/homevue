@@ -15,11 +15,14 @@
             <div style="flex: 1"></div>
             <image class="addWorld" src="../../img/authorization_success_icon.png" @click="addWorld"/>
         </div>
+        <wxc-loading :show="showLoading" type="trip" loading-text="努力加载中..."></wxc-loading>
+        <wxc-part-loading :show="showLoading"></wxc-part-loading>
+
     </div>
 </template>
 
 <script>
-    import {WxcButton, WxcPopup, WxcMinibar} from 'weex-ui';
+    import {WxcLoading, WxcPopup, WxcMinibar} from 'weex-ui';
     import navigationBar from "../../component/navigationBar.vue";
 
     const stream = weex.requireModule('stream')
@@ -29,7 +32,7 @@
 
 
     export default {
-        components: {navigationBar, WxcButton, WxcPopup, WxcMinibar},
+        components: {navigationBar, WxcLoading, WxcPopup, WxcMinibar},
         name: "home-aworld",
         data() {
             return {
@@ -37,7 +40,8 @@
                 textHeight: 300,
                 imgSrc: "",
                 inputWorld: "",
-                path:""
+                path: "",
+                showLoading: false
             }
         },
 
@@ -47,7 +51,9 @@
         methods: {
             back() {
                 xbuiness.backPage()
+                // xbuiness.openURL("module/util/AddImage")
             },
+
             addImage() {
                 xbuiness.PickeImage(src => {
 
@@ -57,37 +63,52 @@
                 })
             },
             addWorld() {
-                console.log("1111111")
-                xbuiness.uploadFile(this.path, url => {
-                    console.log(url)
-                    xbuiness.getString("currentItemIndex", v => {
-                        const parm = {
-
-                            "title": "",
-                            "des": this.inputWorld,
-                            "img": url,
-                            "did": "default",
-                            "index": v,
-                        }
-                        console.log(parm)
-                        stream.fetch({
-                            method: "POST",
-                            url: 'https://d.apicloud.com/mcm/api/aworlds',
-                            type: 'json',
-                            headers: sha1m.getttt(),
-                            body: parm
-                        }, res => {
-                            if (res.ok) {
-                                xbuiness.backByNum(2)
-                            } else {
-
-                            }
-                        })
+                this.showLoading = true
+                if (this.path == "") {
+                    this.commitItem("")
+                } else {
+                    xbuiness.uploadFile(this.path, url => {
+                        this.commitItem(url)
                     })
-                })
+                }
 
 
             },
+            commitItem(url) {
+                xbuiness.getString("currentItemIndex", i => {
+
+                    const parm = {
+
+                        "title": "",
+                        "des": this.inputWorld,
+                        "img": url,
+                        "did": "default",
+                        "index": i,
+                    }
+
+                    stream.fetch({
+                        method: "POST",
+                        url: 'https://d.apicloud.com/mcm/api/aworlds',
+                        type: 'json',
+                        headers: sha1m.getttt(),
+                        body: parm
+                    }, res => {
+                        if (res.ok) {
+                            this.showLoading = false
+                            xbuiness.backByNum(2)
+                        } else {
+
+                            modal.toast({
+                                'message': '提交出错请重试',
+                                'duration': 1
+                            });
+                            return
+
+                        }
+                    })
+                })
+
+            }
         }
     }
 </script>
@@ -120,9 +141,10 @@
         top: 700px;
         left: 341px;
         width: 68px;
-        height:120px;
+        height: 120px;
         position: absolute
     }
+
     .space {
 
         position: absolute
@@ -131,6 +153,7 @@
     .continer {
         background-image: linear-gradient(to bottom right, #339bce, #35cc89);
     }
+
     .addWorld {
         width: 140px;
         height: 140px;
